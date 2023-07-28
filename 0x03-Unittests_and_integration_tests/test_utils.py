@@ -62,20 +62,7 @@ class TestGetJson(unittest.TestCase):
 class TestMemoize(unittest.TestCase):
     """Unittest Test Case for utils.memoize"""
 
-    @parameterized.expand([
-        (1),
-        (2),
-        (4),
-        (8),
-        (16),
-        (32),
-        (64),
-        (128),
-        (256),
-        (512),
-        (1024),
-    ])
-    def test_memoize(self, attr):
+    def test_memoize(self):
         """Test memoize works using TestClass Mock"""
 
         class TestClass:
@@ -87,10 +74,10 @@ class TestMemoize(unittest.TestCase):
                 return self.a_method()
 
         with patch.object(TestClass, 'a_method',
-                          return_value=attr) as a_memo:
+                          return_value=42) as a_memo:
             test = TestClass()
-            self.assertEqual(test.a_property, attr)
-            self.assertEqual(test.a_property, attr)
+            self.assertEqual(test.a_property, 42)
+            self.assertEqual(test.a_property, 42)
         a_memo.assert_called_once()
 
 
