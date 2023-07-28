@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""0. Parameterize a unit test"""
+"""Utils unit tests"""
 import unittest
 from unittest.mock import patch, Mock
 from parameterized import parameterized
 from utils import (
     access_nested_map,
-    get_json
+    get_json,
+    memoize
 )
 from typing import (
     Mapping,
     Any,
     Sequence,
-    Dict
+    Dict,
+    Callable
 )
 
 
@@ -42,7 +44,7 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestGetJson(unittest.TestCase):
-    """Unit Test Test Case for utils.get_json"""
+    """Unittest Test Case for utils.get_json"""
 
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
@@ -55,6 +57,41 @@ class TestGetJson(unittest.TestCase):
                 as r_get:
             self.assertEqual(get_json(test_url), test_payload)
             r_get.assert_called_once_with(test_url)
+
+
+class TestMemoize(unittest.TestCase):
+    """Unittest Test Case for utils.memoize"""
+
+    @parameterized.expand([
+        (1),
+        (2),
+        (4),
+        (8),
+        (16),
+        (32),
+        (64),
+        (128),
+        (256),
+        (512),
+        (1024),
+    ])
+    def test_memoize(self, attr):
+        """Test memoize works using TestClass Mock"""
+
+        class TestClass:
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                return self.a_method()
+
+        with patch.object(TestClass, 'a_method',
+                          return_value=attr) as a_memo:
+            test = TestClass()
+            self.assertEqual(test.a_property, attr)
+            self.assertEqual(test.a_property, attr)
+        a_memo.assert_called_once()
 
 
 if __name__ == '__main__':
