@@ -43,8 +43,11 @@ class TestGithubOrgClient(unittest.TestCase):
             org = GithubOrgClient('Google')
             # self.assertEqual(org._public_repos_url, resp['repos_url'])
             self.assertEqual(org.public_repos(),
-                             ['episodes.dart', 'cpp-netlib', 'dagger', 'ios-webkit-debug-proxy',
-                             'google.github.io', 'kratu', 'build-debian-cloud', 'traceur-compiler', 'firmata.py'])
+                             ['episodes.dart', 'cpp-netlib',
+                              'dagger', 'ios-webkit-debug-proxy',
+                              'google.github.io', 'kratu',
+                              'build-debian-cloud', 'traceur-compiler',
+                              'firmata.py'])
             m_org.assert_called_once()
             p_get_json.assert_called_once()
 
