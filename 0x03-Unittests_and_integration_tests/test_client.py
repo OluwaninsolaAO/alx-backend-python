@@ -6,7 +6,7 @@ import unittest
 from parameterized import parameterized
 from unittest.mock import patch, PropertyMock
 from fixtures import TEST_PAYLOAD
-from typing import Callable
+from typing import Callable, Dict
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -50,6 +50,16 @@ class TestGithubOrgClient(unittest.TestCase):
                               'firmata.py'])
             m_org.assert_called_once()
             p_get_json.assert_called_once()
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False),
+    ])
+    def test_has_license(self, repo: Dict, license_key: str,
+                         expected: bool):
+        """Tests GithubOrgClient.has_license"""
+        self.assertEqual(GithubOrgClient.has_license(repo, license_key),
+                         expected)
 
 
 if __name__ == '__main__':
